@@ -7,12 +7,27 @@ import java.util.List;
 import java.util.Map;
 
 public class Directory extends Entry{
-    private Map<String, Entry> entries;
+    private Map<String, Directory> subDirs;
+    private Map<String, MyFile> files;
 
-    public Directory(String name, String path, LocalDateTime createdAt) {
-        super(name, path, createdAt);
-        this.entries = new HashMap<>();
+    public Directory(String name, /*String path, */LocalDateTime createdAt, Directory parent) {
+        super(name, /*path,*/ createdAt, parent);
+        this.subDirs = new HashMap<>();
+        this.files = new HashMap<>();
+    }
 
+    public Map<String, MyFile> getFiles() {
+        return files;
+    }
+    public Map<String, Directory> getSubDirs() {
+        return subDirs;
+    }
+    public Directory getParent() {
+        return parent;
+    }
+
+    public void setParent(Directory parent) {
+        this.parent = parent;
     }
 
     @Override
@@ -20,33 +35,4 @@ public class Directory extends Entry{
         return true;
     }
 
-    public void addEntry(Entry addedEntry){
-        if(entries.containsKey(addedEntry.getName())) {
-            System.out.println("Operação impedida: já existe um arquivo ou diretório com o nome inserido");
-            return;
-        }
-        entries.put(addedEntry.getName(), addedEntry);
-    }
-    public void removeEntry(String name){
-        if (!entries.containsKey(name)){
-            System.out.println("Operação impedida: arquivo ou diretório não encontrado");
-        }
-        entries.remove(name);
-    }
-    public Entry getEntry(String name){
-        if (!entries.containsKey(name)){
-            System.out.println("Operação impedida: arquivo ou diretório não encontrado");
-        }
-        return entries.get(name);
-    }
-
-    public void listEntries() {
-        List<Entry> entriesList = new ArrayList<>();
-        for (String name : entries.keySet()) {
-            Entry entry = entries.get(name);
-            String type = (entry.isDirectory()) ? "[DIR] " : "[FILE] ";
-            System.out.println(type + name);
-            entriesList.add(entry);
-        }
-    }
 }

@@ -6,10 +6,10 @@ public class MyFile extends Entry{
     private String content;
     private long size;
 
-    public MyFile(String name, String path, LocalDateTime createdAt, String content) {
-        super(name, path, createdAt);
-        this.content = "";
-        this.size = 0;
+    public MyFile(String name, /*String path,*/ LocalDateTime createdAt, String content, Directory parent) {
+        super(name,/* path,*/ createdAt, parent);
+        this.content = (content == null) ? "" : content;
+        this.size = this.content.getBytes().length;;
     }
 
     public String getContent() {
