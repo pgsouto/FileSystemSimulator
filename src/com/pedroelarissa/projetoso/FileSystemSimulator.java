@@ -104,17 +104,36 @@ public class FileSystemSimulator {
         }
     }
 
-    public void changeDirectory(String name) {
-        if (name.equals("..")) {
-            if (currentDirectory.getParent() != null) {
-                currentDirectory = currentDirectory.getParent();
-            }
-        } else if (currentDirectory.getSubDirs().containsKey(name)) {
-            currentDirectory = currentDirectory.getSubDirs().get(name);
-        } else {
-            System.out.println("Diretório não encontrado.");
+    public void changeDirectory(String path) {
+        if (path.equals("/")) {
+            currentDirectory = root;
+            return;
         }
+
+        String[] parts = path.split("/");
+        Directory temp = path.startsWith("/") ? root : currentDirectory;
+
+        for (String part : parts) {
+            if (part.isEmpty() || part.equals(".")) {
+                continue; // ignora vazio ou . (diretório atual)
+            } else if (part.equals("..")) {
+                if (temp.getParent() != null) {
+                    temp = temp.getParent();
+                }
+            } else {
+                Directory next = temp.getSubDirs().get(part);
+                if (next != null) {
+                    temp = next;
+                } else {
+                    System.out.println("Diretório não encontrado: " + part);
+                    return;
+                }
+            }
+        }
+
+        currentDirectory = temp;
     }
+
 
     private void updateSubPaths(Directory dir) {
         for (Directory subDir : dir.getSubDirs().values()) {
