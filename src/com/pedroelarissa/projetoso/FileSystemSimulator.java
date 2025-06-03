@@ -27,40 +27,44 @@ public class FileSystemSimulator {
                 replayJournalEntry(entry);
             }
             save();
-            journal.clear();
         } else {
             this.root = new Directory("meuso:", LocalDateTime.now(), null);
             this.currentDirectory = root;
             save();
-            journal.clear();
         }
     }
 
     private void replayJournalEntry(String entry) {
-        String[] tokens = entry.split(" ", 3);
-        String cmd = tokens[0];
+        String[] tokens = entry.split(" ", 4); // [data] [COMANDO] arg1 [arg2]
+
+        if (tokens.length < 2) {
+            System.err.println("Entrada de journal inválida: " + entry);
+            return;
+        }
+
+        String cmd = tokens[1].replace("[", "").replace("]", "");
 
         switch (cmd) {
             case "CREATE_DIR":
-                createDirectoryByPath(tokens[1], false);
+                createDirectoryByPath(tokens[2], false);
                 break;
             case "DELETE_DIR":
-                deleteDirectoryByPath(tokens[1], false);
+                deleteDirectoryByPath(tokens[2], false);
                 break;
             case "RENAME_DIR":
-                renameDirectoryByPath(tokens[1], tokens[2], false);
+                renameDirectoryByPath(tokens[2], tokens[3], false);
                 break;
             case "CREATE_FILE":
-                createFileByPath(tokens[1], tokens.length > 2 ? tokens[2] : "", false);
+                createFileByPath(tokens[2], tokens.length > 3 ? tokens[3] : "", false);
                 break;
             case "DELETE_FILE":
-                deleteFileByPath(tokens[1], false);
+                deleteFileByPath(tokens[2], false);
                 break;
             case "RENAME_FILE":
-                renameFileByPath(tokens[1], tokens[2], false);
+                renameFileByPath(tokens[2], tokens[3], false);
                 break;
             case "COPY_FILE":
-                copyFileByPath(tokens[1], tokens[2], false);
+                copyFileByPath(tokens[2], tokens[3], false);
                 break;
             default:
                 System.err.println("Journal: comando desconhecido → " + entry);
@@ -69,7 +73,7 @@ public class FileSystemSimulator {
 
     private void createDirectoryByPath(String fullPath, boolean writeJournal) {
         if (writeJournal) {
-            journal.appendEntry("CREATE_DIR " + fullPath);
+            journal.appendEntry("["+LocalDateTime.now()+"] " + "[CREATE_DIR] " + fullPath);
         }
         String normalized = fullPath.startsWith("/") ? fullPath.substring(1) : fullPath;
         String[] parts = normalized.split("/");
@@ -100,7 +104,7 @@ public class FileSystemSimulator {
 
     private void deleteDirectoryByPath(String fullPath, boolean writeJournal) {
         if (writeJournal) {
-            journal.appendEntry("DELETE_DIR " + fullPath);
+            journal.appendEntry("["+LocalDateTime.now()+"] " + "[DELETE_DIR] " + fullPath);
         }
         String normalized = fullPath.startsWith("/") ? fullPath.substring(1) : fullPath;
         String[] parts = normalized.split("/");
@@ -128,7 +132,7 @@ public class FileSystemSimulator {
 
     private void renameDirectoryByPath(String fullPath, String novoNome, boolean writeJournal) {
         if (writeJournal) {
-            journal.appendEntry("RENAME_DIR " + fullPath + " " + novoNome);
+            journal.appendEntry("["+LocalDateTime.now()+"] " +"[RENAME_DIR] " + fullPath + " " + novoNome);
         }
         String normalized = fullPath.startsWith("/") ? fullPath.substring(1) : fullPath;
         String[] parts = normalized.split("/");
@@ -159,7 +163,7 @@ public class FileSystemSimulator {
 
     private void createFileByPath(String fullPath, String conteudo, boolean writeJournal) {
         if (writeJournal) {
-            journal.appendEntry("CREATE_FILE " + fullPath + " " + conteudo.replaceAll("\\r?\\n", "\\\\n"));
+            journal.appendEntry("["+LocalDateTime.now()+"] " +"[CREATE_FILE] " + fullPath + " " + conteudo.replaceAll("\\r?\\n", "\\\\n"));
         }
         String normalized = fullPath.startsWith("/") ? fullPath.substring(1) : fullPath;
         String[] parts = normalized.split("/");
@@ -189,7 +193,7 @@ public class FileSystemSimulator {
 
     private void deleteFileByPath(String fullPath, boolean writeJournal) {
         if (writeJournal) {
-            journal.appendEntry("DELETE_FILE " + fullPath);
+            journal.appendEntry("["+LocalDateTime.now()+"] " +"[DELETE_FILE] " + fullPath);
         }
         String normalized = fullPath.startsWith("/") ? fullPath.substring(1) : fullPath;
         String[] parts = normalized.split("/");
@@ -217,7 +221,7 @@ public class FileSystemSimulator {
 
     private void renameFileByPath(String fullPath, String novoNome, boolean writeJournal) {
         if (writeJournal) {
-            journal.appendEntry("RENAME_FILE " + fullPath + " " + novoNome);
+            journal.appendEntry("["+LocalDateTime.now()+"] " +"[RENAME_FILE] " + fullPath + " " + novoNome);
         }
         String normalized = fullPath.startsWith("/") ? fullPath.substring(1) : fullPath;
         String[] parts = normalized.split("/");
@@ -248,7 +252,7 @@ public class FileSystemSimulator {
 
     private void copyFileByPath(String origemPath, String destinoDirPath, boolean writeJournal) {
         if (writeJournal) {
-            journal.appendEntry("COPY_FILE " + origemPath + " " + destinoDirPath);
+            journal.appendEntry("["+LocalDateTime.now()+"] " +"[COPY_FILE] " + origemPath + " " + destinoDirPath);
         }
         String normalizedOrigem = origemPath.startsWith("/") ? origemPath.substring(1) : origemPath;
         String[] partsOrigem = normalizedOrigem.split("/");
