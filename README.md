@@ -99,4 +99,4 @@ O log registra o tipo de operação, os objetos envolvidos e o timestamp.
 1. Clone o repositório:
 
 ```bash
-git clone [https://github.com/pgsouto/FileSystemSimulator]
+git clone https://github.com/pgsouto/FileSystemSimulator
