@@ -1,4 +1,8 @@
 # Simulador de Sistema de Arquivos com Journaling em Java
+## 👥 Integrantes
+- **Pedro Guilherme**
+- **Larissa Antonia**
+
 
 ## 📄 Introdução
 
