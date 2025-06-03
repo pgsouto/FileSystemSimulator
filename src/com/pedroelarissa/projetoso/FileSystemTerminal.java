@@ -81,21 +81,21 @@ public class FileSystemTerminal {
                     System.out.println("💾 Saindo e salvando...");
                     scanner.close();
                     return;
-                case "help":
-                    System.out.println("""
-                            Comandos disponíveis:
-                            mkdir nomeDiretorio       - Criar diretório
-                            rmdir nomeDiretorio       - Remover diretório
-                            renameDir ant novo        - Renomear diretório
-                            cd nomeDiretorio ou ..    - Entrar em diretório ou voltar
-                            ls                        - Listar conteúdo
-                            touch nomeArquivo conteudo- Criar arquivo
-                            rm nomeArquivo            - Remover arquivo
-                            rename ant novo           - Renomear arquivo
-                            copy arquivo dir          - Copiar arquivo para diretório
-                            help                      - Mostrar ajuda
-                            exit                      - Sair
-                            """);
+                    case "help":
+                    System.out.println(
+                        "Comandos disponíveis:\n" +
+                        "mkdir nomeDiretorio       - Criar diretório\n" +
+                        "rmdir nomeDiretorio       - Remover diretório\n" +
+                        "renameDir ant novo        - Renomear diretório\n" +
+                        "cd nomeDiretorio ou ..    - Entrar em diretório ou voltar\n" +
+                        "ls                        - Listar conteúdo\n" +
+                        "touch nomeArquivo conteudo- Criar arquivo\n" +
+                        "rm nomeArquivo            - Remover arquivo\n" +
+                        "rename ant novo           - Renomear arquivo\n" +
+                        "copy arquivo dir          - Copiar arquivo para diretório\n" +
+                        "help                      - Mostrar ajuda\n" +
+                        "exit                      - Sair"
+                    );
                     break;
                 default:
                     System.out.println("Comando não reconhecido. Digite 'help' para ajuda.");
